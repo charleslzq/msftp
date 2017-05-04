@@ -1,0 +1,45 @@
+logging:
+  level: debug
+
+server:
+  port: 8099
+
+spring:
+  application:
+    name: ms-ftp
+  profiles:
+    active: dev
+  jmx:
+    default-domain: ${spring.application.name}
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false      #开发环境无需微服务注册
+    serviceUrl:
+       defaultZone: http://user:password@localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+    statusPageUrlPath: ${management.contextPath}/info
+    healthCheckUrlPath: ${management.contextPath}/health
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+qy:
+  ftp:
+    server:
+      baseDir:
+        windows: C:/usr/ftp
+        unix: /usr/ftp
+        linux: /usr/ftp
+      users:
+        - name: admin
+          password: admin
+        - name: anonymous
+          password:
+          write: false
+security:
+  user:
+    name: admin
+    password: admin
+    role: ADMIN

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ms-ftp
+    instance_id: 001
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:C:\usr\config\application-dev.yml
