@@ -26,6 +26,11 @@ eureka:
       instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 qy:
+  remote:
+    managed:
+      services:
+        test: /qy/test/test.sh
+        aliPayTest: /qy/test/ali-pay-test.sh
   ftp:
     server:
       baseDir:

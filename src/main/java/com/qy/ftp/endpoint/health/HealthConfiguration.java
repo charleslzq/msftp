@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter(FtpServerConfiguration.class)
 public class HealthConfiguration {
 
-	@Bean
-	public FtpHealthIndicator ftpHealthIndicator(FtpServerContainer ftpServerContainer) {
-		return new FtpHealthIndicator(ftpServerContainer);
-	}
+    @Bean
+    public FtpHealthIndicator ftpHealthIndicator(FtpServerContainer ftpServerContainer) {
+        return new FtpHealthIndicator(ftpServerContainer);
+    }
 }

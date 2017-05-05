@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServerStatusController {
 
-	@RequestMapping(value = "/serverisok", method = RequestMethod.GET)
-	public Health serverIsOK() {
-		return new Health.Builder().status("ok").build();
-	}
+    @RequestMapping(value = "/serverisok", method = RequestMethod.GET)
+    public Health serverIsOK() {
+        return new Health.Builder().status("ok").build();
+    }
 }

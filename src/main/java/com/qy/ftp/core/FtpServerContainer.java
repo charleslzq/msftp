@@ -22,83 +22,83 @@ import java.util.Optional;
  */
 @Slf4j
 public class FtpServerContainer implements SmartInitializingSingleton, SmartLifecycle, DisposableBean {
-	private final FtpServerFactory ftpServerFactory;
-	@Getter
-	private final String rootPath;
-	private FtpServer ftpServer;
-	@Setter
-	private boolean autoStartup = true;
-	@Getter
-	@Setter
-	private int phase = 0;
+    private final FtpServerFactory ftpServerFactory;
+    @Getter
+    private final String rootPath;
+    private FtpServer ftpServer;
+    @Setter
+    private boolean autoStartup = true;
+    @Getter
+    @Setter
+    private int phase = 0;
 
-	public FtpServerContainer(FtpServerFactory ftpServerFactory, String rootPath) {
-		this.ftpServerFactory = ftpServerFactory;
-		this.rootPath = rootPath;
-	}
+    public FtpServerContainer(FtpServerFactory ftpServerFactory, String rootPath) {
+        this.ftpServerFactory = ftpServerFactory;
+        this.rootPath = rootPath;
+    }
 
-	public Optional<FtpletContext> getFtpletContext() {
-		if (ftpServer instanceof DefaultFtpServer) {
-			return Optional.of(((DefaultFtpServer) ftpServer).getServerContext());
-		} else {
-			return Optional.empty();
-		}
-	}
+    public Optional<FtpletContext> getFtpletContext() {
+        if (ftpServer instanceof DefaultFtpServer) {
+            return Optional.of(((DefaultFtpServer) ftpServer).getServerContext());
+        } else {
+            return Optional.empty();
+        }
+    }
 
-	@Override
-	public void afterSingletonsInstantiated() {
-		if (ftpServerFactory.getListeners().size() == 0) {
-			ftpServerFactory.addListener("default", (new ListenerFactory()).createListener());
-		}
-		ftpServer = ftpServerFactory.createServer();
-		if (this.isAutoStartup()) {
-			this.start();
-			Map<String, Listener> listeners = ftpServerFactory.getListeners();
-			listeners.values().stream().forEach(
-					listener -> log.info("Using Port: {}", listener.getPort())
-			);
-		}
-	}
+    @Override
+    public void afterSingletonsInstantiated() {
+        if (ftpServerFactory.getListeners().size() == 0) {
+            ftpServerFactory.addListener("default", (new ListenerFactory()).createListener());
+        }
+        ftpServer = ftpServerFactory.createServer();
+        if (this.isAutoStartup()) {
+            this.start();
+            Map<String, Listener> listeners = ftpServerFactory.getListeners();
+            listeners.values().stream().forEach(
+                    listener -> log.info("Using Port: {}", listener.getPort())
+            );
+        }
+    }
 
-	@Override
-	public void destroy() throws Exception {
-		this.stop(() -> log.info("Ftp Server Stopped"));
-	}
+    @Override
+    public void destroy() throws Exception {
+        this.stop(() -> log.info("Ftp Server Stopped"));
+    }
 
-	@Override
-	public boolean isAutoStartup() {
-		return autoStartup;
-	}
+    @Override
+    public boolean isAutoStartup() {
+        return autoStartup;
+    }
 
-	@Override
-	public void stop(Runnable runnable) {
-		if (ftpServer != null) {
-			ftpServer.stop();
-			if (null != runnable) {
-				runnable.run();
-			}
-		}
-	}
+    @Override
+    public void stop(Runnable runnable) {
+        if (ftpServer != null) {
+            ftpServer.stop();
+            if (null != runnable) {
+                runnable.run();
+            }
+        }
+    }
 
-	@Override
-	public void start() {
-		if (ftpServer != null) {
-			try {
-				ftpServer.start();
-				log.info("Ftp Server Started Successfully");
-			} catch (FtpException e) {
-				log.error("Error when start ftp server", e);
-			}
-		}
-	}
+    @Override
+    public void start() {
+        if (ftpServer != null) {
+            try {
+                ftpServer.start();
+                log.info("Ftp Server Started Successfully");
+            } catch (FtpException e) {
+                log.error("Error when start ftp server", e);
+            }
+        }
+    }
 
-	@Override
-	public void stop() {
-		stop(null);
-	}
+    @Override
+    public void stop() {
+        stop(null);
+    }
 
-	@Override
-	public boolean isRunning() {
-		return ftpServer == null ? false : !ftpServer.isStopped() && !ftpServer.isSuspended();
-	}
+    @Override
+    public boolean isRunning() {
+        return ftpServer == null ? false : !ftpServer.isStopped() && !ftpServer.isSuspended();
+    }
 }

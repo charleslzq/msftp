@@ -14,9 +14,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({
-		FtpServerConfiguration.class,
-		HealthConfiguration.class,
-		DeployFileEndpointConfiguration.class
+        FtpServerConfiguration.class,
+        HealthConfiguration.class,
+        DeployFileEndpointConfiguration.class
 })
 public @interface EnableFtpServer {
 }

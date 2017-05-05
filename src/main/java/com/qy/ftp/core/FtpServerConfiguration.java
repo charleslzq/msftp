@@ -22,42 +22,42 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableConfigurationProperties({
-		FtpServerProperties.class,
-		UserProperties.class
+        FtpServerProperties.class,
+        UserProperties.class
 })
 public class FtpServerConfiguration {
 
-	@Autowired
-	private FtpServerProperties ftpServerProperties;
+    @Autowired
+    private FtpServerProperties ftpServerProperties;
 
-	@Autowired
-	private UserProperties userProperties;
+    @Autowired
+    private UserProperties userProperties;
 
-	private String rootPath;
+    private String rootPath;
 
-	@Bean
-	@ConditionalOnMissingBean
-	public UserManager ymlUserManager() {
-		rootPath = userProperties.getBaseDir().get(OsEnum.getOs());
-		if (!StringUtils.hasText(rootPath)) {
-			throw new IllegalStateException("Root Path Not Configured");
-		}
-		File ftpRoot = new File(rootPath);
-		ftpRoot.mkdir();
-		return new YmlUserManager(
-				userProperties.getUsers().stream()
-						.filter(ftpUser -> null != ftpUser.getName() && null != ftpUser.getPassword())
-						.map(ftpUser -> ftpUser.createUser(rootPath))
-						.collect(Collectors.toMap(User::getName, Function.identity())),
-				userProperties.getAdmin()
-		);
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public UserManager ymlUserManager() {
+        rootPath = userProperties.getBaseDir().get(OsEnum.getOs());
+        if (!StringUtils.hasText(rootPath)) {
+            throw new IllegalStateException("Root Path Not Configured");
+        }
+        File ftpRoot = new File(rootPath);
+        ftpRoot.mkdir();
+        return new YmlUserManager(
+                userProperties.getUsers().stream()
+                        .filter(ftpUser -> null != ftpUser.getName() && null != ftpUser.getPassword())
+                        .map(ftpUser -> ftpUser.createUser(rootPath))
+                        .collect(Collectors.toMap(User::getName, Function.identity())),
+                userProperties.getAdmin()
+        );
+    }
 
-	@Bean
-	public FtpServerContainer ftpServerContainer(UserManager userManager) {
-		FtpServerFactory ftpServerFactory = new FtpServerFactory();
-		ftpServerFactory.setUserManager(userManager);
-		ftpServerFactory.setConnectionConfig(ftpServerProperties.createConnectionConfig());
-		return new FtpServerContainer(ftpServerFactory, rootPath);
-	}
+    @Bean
+    public FtpServerContainer ftpServerContainer(UserManager userManager) {
+        FtpServerFactory ftpServerFactory = new FtpServerFactory();
+        ftpServerFactory.setUserManager(userManager);
+        ftpServerFactory.setConnectionConfig(ftpServerProperties.createConnectionConfig());
+        return new FtpServerContainer(ftpServerFactory, rootPath);
+    }
 }

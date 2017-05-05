@@ -100,7 +100,6 @@
             <groupId>com.qy.pay.utils</groupId>
             <artifactId>util</artifactId>
             <version>1.0.10</version>
-            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.ftpserver</groupId>
@@ -141,9 +140,15 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.qy.api</groupId>
+            <artifactId>qy-common</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.12</version>
+            <version>RELEASE</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

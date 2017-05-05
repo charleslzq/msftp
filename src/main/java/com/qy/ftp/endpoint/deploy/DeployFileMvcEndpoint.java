@@ -26,64 +26,64 @@ import java.util.stream.Collectors;
  */
 public class DeployFileMvcEndpoint extends EndpointMvcAdapter {
 
-	public DeployFileMvcEndpoint(DeployFileEndpoint delegate) {
-		super(delegate);
-	}
+    public DeployFileMvcEndpoint(DeployFileEndpoint delegate) {
+        super(delegate);
+    }
 
-	public Path getPath(final String path) {
-		return ((DeployFileEndpoint) getDelegate()).getDeployFileManager().getPath(path);
-	}
+    public Path getPath(final String path) {
+        return ((DeployFileEndpoint) getDelegate()).getDeployFileManager().getPath(path);
+    }
 
-	@RequestMapping(value = "/**", method = RequestMethod.GET)
-	@ResponseBody
-	public List<File> list(
-			HttpServletRequest request,
-			@RequestParam(value = "accept", required = false, defaultValue = ".*") final String regex
-	) {
-		String path = extractRelativePath(request);
-		FileFilter fileFilter = regex == null ?
-				file -> true :
-				file -> Pattern.compile(regex).matcher(file.getName()).find();
-		return ((DeployFileEndpoint) getDelegate()).getDeployFileManager().listFile(path, fileFilter);
-	}
+    @RequestMapping(value = "/**", method = RequestMethod.GET)
+    @ResponseBody
+    public List<File> list(
+            HttpServletRequest request,
+            @RequestParam(value = "accept", required = false, defaultValue = ".*") final String regex
+    ) {
+        String path = extractRelativePath(request);
+        FileFilter fileFilter = regex == null ?
+                file -> true :
+                file -> Pattern.compile(regex).matcher(file.getName()).find();
+        return ((DeployFileEndpoint) getDelegate()).getDeployFileManager().listFile(path, fileFilter);
+    }
 
-	@RequestMapping(value = "/copy", method = RequestMethod.POST)
-	@ResponseBody
-	public CopyResponse copyTo(
-			@RequestParam("source") final List<String> sourceList,
-			@RequestParam("dest") final List<String> destList
-	) {
-		String source = sourceList.stream().collect(Collectors.joining(File.separator));
-		String dest = destList.stream().collect(Collectors.joining(File.separator));
-		Path sourcePath = getPath(source);
-		if (!sourcePath.toFile().exists()) {
-			return new CopyResponse(false, sourcePath.toString(), dest, "Source File Not Exist!");
-		}
-		try {
-			Path destPath = Paths.get(dest);
-			if (!destPath.toFile().exists() || destPath.toFile().isFile()) {
-				destPath.toFile().mkdirs();
-			}
+    @RequestMapping(value = "/copy", method = RequestMethod.POST)
+    @ResponseBody
+    public CopyResponse copyTo(
+            @RequestParam("source") final List<String> sourceList,
+            @RequestParam("dest") final List<String> destList
+    ) {
+        String source = sourceList.stream().collect(Collectors.joining(File.separator));
+        String dest = destList.stream().collect(Collectors.joining(File.separator));
+        Path sourcePath = getPath(source);
+        if (!sourcePath.toFile().exists()) {
+            return new CopyResponse(false, sourcePath.toString(), dest, "Source File Not Exist!");
+        }
+        try {
+            Path destPath = Paths.get(dest);
+            if (!destPath.toFile().exists() || destPath.toFile().isFile()) {
+                destPath.toFile().mkdirs();
+            }
 
-			Files.walkFileTree(sourcePath, new TreeCopier(sourcePath, destPath));
-			return new CopyResponse(true, sourcePath.toString(), dest, "File(s) copped successfully!");
-		} catch (Exception e) {
-			return new CopyResponse(false, sourcePath.toString(), dest, "Error Copying File:\t" + e.getMessage());
-		}
-	}
+            Files.walkFileTree(sourcePath, new TreeCopier(sourcePath, destPath));
+            return new CopyResponse(true, sourcePath.toString(), dest, "File(s) copped successfully!");
+        } catch (Exception e) {
+            return new CopyResponse(false, sourcePath.toString(), dest, "Error Copying File:\t" + e.getMessage());
+        }
+    }
 
-	private String extractRelativePath(HttpServletRequest request) {
-		String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		String bestMatchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
-		return new AntPathMatcher().extractPathWithinPattern(bestMatchPattern, path);
-	}
+    private String extractRelativePath(HttpServletRequest request) {
+        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        String bestMatchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        return new AntPathMatcher().extractPathWithinPattern(bestMatchPattern, path);
+    }
 
-	@Data
-	@AllArgsConstructor
-	static class CopyResponse {
-		private boolean success;
-		private String source;
-		private String destDir;
-		private String message;
-	}
+    @Data
+    @AllArgsConstructor
+    static class CopyResponse {
+        private boolean success;
+        private String source;
+        private String destDir;
+        private String message;
+    }
 }

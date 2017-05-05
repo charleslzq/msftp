@@ -14,24 +14,24 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(DeployFileProperties.class)
 public class DeployFileEndpointConfiguration {
 
-	@Autowired
-	private UserProperties userProperties;
+    @Autowired
+    private UserProperties userProperties;
 
-	@Autowired
-	private DeployFileProperties deployFileProperties;
+    @Autowired
+    private DeployFileProperties deployFileProperties;
 
-	@Bean
-	public DeployFileEndpoint deployEndpoint() {
-		DeployFileManager manager = new DeployFileManager(userProperties.getBaseDir().get(OsEnum.getOs()));
-		return new DeployFileEndpoint(
-				deployFileProperties.getId(),
-				deployFileProperties.isSensitive(),
-				deployFileProperties.isEnabled(),
-				manager);
-	}
+    @Bean
+    public DeployFileEndpoint deployEndpoint() {
+        DeployFileManager manager = new DeployFileManager(userProperties.getBaseDir().get(OsEnum.getOs()));
+        return new DeployFileEndpoint(
+                deployFileProperties.getId(),
+                deployFileProperties.isSensitive(),
+                deployFileProperties.isEnabled(),
+                manager);
+    }
 
-	@Bean
-	public DeployFileMvcEndpoint deployMvcEndpoint() {
-		return new DeployFileMvcEndpoint(deployEndpoint());
-	}
+    @Bean
+    public DeployFileMvcEndpoint deployMvcEndpoint() {
+        return new DeployFileMvcEndpoint(deployEndpoint());
+    }
 }

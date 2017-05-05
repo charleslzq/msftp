@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableEurekaClient
 public class FtpServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FtpServerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FtpServerApplication.class, args);
+    }
 }

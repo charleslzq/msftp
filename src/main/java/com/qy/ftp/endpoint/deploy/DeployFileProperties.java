@@ -9,16 +9,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "endpoints.deployFile")
 @Data
 public class DeployFileProperties {
-	/**
-	 * 发布端点id
-	 */
-	private String id = "deployFile";
-	/**
-	 * 启用端点安全机制
-	 */
-	private boolean sensitive = true;
-	/**
-	 * 启用端点
-	 */
-	private boolean enabled = true;
+    /**
+     * 发布端点id
+     */
+    private String id = "deployFile";
+    /**
+     * 启用端点安全机制
+     */
+    private boolean sensitive = true;
+    /**
+     * 启用端点
+     */
+    private boolean enabled = true;
 }
