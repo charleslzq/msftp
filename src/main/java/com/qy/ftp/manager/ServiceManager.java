@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by charleslzq on 17-5-5.
@@ -63,7 +64,7 @@ public class ServiceManager {
         if (process.isAlive()) {
             process.destroy();
             try {
-                process.waitFor();
+                process.waitFor(2, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 log.error("Something Error Happen When Stopping Process", e);
             } finally {
