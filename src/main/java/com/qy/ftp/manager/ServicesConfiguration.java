@@ -26,6 +26,7 @@ public class ServicesConfiguration {
                                 true
                         )
                 );
+        serviceManager.detectRunningServices();
         return serviceManager;
     }
 }
