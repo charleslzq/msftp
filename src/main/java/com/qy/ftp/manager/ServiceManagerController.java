@@ -60,12 +60,6 @@ public class ServiceManagerController {
                 manager.shutdown(service);
             }
         },
-        RESTART {
-            @Override
-            protected void doRun(ServiceManager manager, String service) throws IOException {
-                manager.restart(service);
-            }
-        },
         STATUS {
             @Override
             public String run(ServiceManager manager, String service) {

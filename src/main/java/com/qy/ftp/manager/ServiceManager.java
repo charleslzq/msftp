@@ -75,10 +75,6 @@ public class ServiceManager {
         }
     }
 
-    public void restart(String service) throws IOException {
-        shutdown(service);
-        start(service);
-    }
 
     public String status(String service) {
         boolean registerState = serviceRegistry.containsKey(service);
