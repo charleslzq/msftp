@@ -24,18 +24,12 @@ public class ServiceManager {
         return new ArrayList<>(serviceTracker.keySet());
     }
 
-    public boolean register(String service, String path, boolean override) {
-        File file = new File(path);
-        file.setExecutable(true);
-        if (file.exists() && file.isFile()) {
-            if (override) {
-                serviceRegistry.put(service, file.getAbsolutePath());
-                return true;
-            } else {
-                return serviceRegistry.putIfAbsent(service, file.getAbsolutePath()) == null;
-            }
+    public boolean register(String service, String command, boolean override) {
+        if (override) {
+            serviceRegistry.put(service, command);
+            return true;
         } else {
-            throw new IllegalArgumentException("Script File Not Find");
+            return serviceRegistry.putIfAbsent(service, command) == null;
         }
     }
 
@@ -47,7 +41,11 @@ public class ServiceManager {
             throw new IllegalArgumentException("Service Already In Run");
         }
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(serviceRegistry.get(service));
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "java",
+                    "-jar",
+                    serviceRegistry.get(service)
+            );
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
             serviceTracker.put(service, process);

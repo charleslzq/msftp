@@ -29,8 +29,7 @@ qy:
   remote:
     managed:
       services:
-        test: /qy/test/test.sh
-        aliPayTest: /qy/test/ali-pay-test.sh
+        aliPayTest: /home/charleslzq/IdeaProjects/alipaytest/target/ali-pay-test.jar
   ftp:
     server:
       baseDir:
